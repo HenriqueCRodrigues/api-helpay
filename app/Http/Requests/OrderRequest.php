@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\CreditCardRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -28,14 +29,17 @@ class OrderRequest extends FormRequest
             'product_id' => 'required|exists:products,id', 
             'quantity_purchased' => [
                 'required',
-                Rule::exists('staff')->where(function ($query) {
-                    $query->where('id', $this->request->get('product'));
-                    $query->where('qty_stock', '<=', $this->request->get('quantity_purchased'));
-                }),
+                Rule:: exists('products', 'qty_stock')->where(function ($query) {
+                    $query->where('products.id', $this->request->get('product_id'));
+                    $query->where('products.qty_stock', '<=', $this->request->get('quantity_purchased'));
+                })
             ],
-            'card' => 'required', 
-            'card_number' => 'required|integer', 
-            'date_expiration' => 'required|date|date_format:mm/YYYY', 
+            'card_number' => [
+                'required',
+                'integer',
+                new CreditCardRule($this->request->get('flag'))
+            ], 
+            'date_expiration' => 'required|date_format:m/Y', 
             'flag' => 'required', 
             'cvv' => 'required'
         ];

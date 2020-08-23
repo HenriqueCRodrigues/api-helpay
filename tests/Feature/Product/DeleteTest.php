@@ -19,7 +19,7 @@ class DeleteTest extends TestCase
     }
 
     /** @test */
-    public function it_delete_and_remove_in_database() {
+    public function it_delete_and_hidden_in_database() {
         Carbon::setTestNow(now());
         $product = factory(Product::class)->create();
         $this->deleteProductThroughTheApi($product->id)->assertSuccessful();

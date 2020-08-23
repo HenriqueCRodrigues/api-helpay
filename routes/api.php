@@ -24,3 +24,7 @@ Route::prefix('products')->group(function (){
 Route::prefix('purchase')->group(function (){
     Route::post('', 'OrderController@store')->name('orders.store');
 });
+
+Route::prefix('google')->group(function (){
+    Route::get('callback', 'GoogleController@callback');
+});

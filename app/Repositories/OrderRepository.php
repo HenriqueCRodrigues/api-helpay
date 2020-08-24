@@ -38,7 +38,9 @@ class OrderRepository
                 $product = Product::find($data['product_id']);
                 if ($product->update(['qty_stock' => ($product->qty_stock-$data['quantity_purchased'])])) {
                     \DB::commit();
-                    return ['message' => ['message' => 'Pedido realizado.', 'id_file_drive' => $uploaded['id_file']], 'status' => 200];
+                    $data['message'] = $uploaded['message'];
+                    $data['id_file'] = $uploaded['id_file'];
+                    return ['message' => $data, 'status' => 200];
                 }
             } 
 

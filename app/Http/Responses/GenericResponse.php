@@ -8,7 +8,7 @@ class GenericResponse
 {
     public static function response($array)
     {
-        return (new Response(['data' => $array['message']], $array['status']))
+        return (new Response(['data' => $array['message'], 'status' => $array['status']], $array['status']))
         ->header('Content-Type', 'application/json');
     }
 }

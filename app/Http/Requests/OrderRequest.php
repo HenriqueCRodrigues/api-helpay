@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Rules\CreditCardRule;
+use App\Rules\QuantityPurchasedRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -34,10 +35,7 @@ class OrderRequest extends FormRequest
             'product_id' => 'required|exists:products,id', 
             'quantity_purchased' => [
                 'required',
-                Rule:: exists('products', 'qty_stock')->where(function ($query) {
-                    $query->where('products.id', $this->request->get('product_id'));
-                    $query->where('products.qty_stock', '<=', $this->request->get('quantity_purchased'));
-                })
+                new QuantityPurchasedRule($this->request->get('product_id'))
             ],
             'card' => 'required|array', 
             'card.*.owner' => 'required', 

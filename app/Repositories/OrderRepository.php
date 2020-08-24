@@ -22,9 +22,17 @@ class OrderRepository
 
             \DB::beginTransaction();
             $xml = new SimpleXMLElement('<dados/>');
-            array_walk_recursive($data,function($value, $key) use ($xml) {
-                $xml->addChild($key, $value);
-            });
+            foreach($data as $key => $value) {
+                if (is_array($value)) {
+                    $card = $xml->addChild($key);
+                    foreach($value[0] as $key => $info) {
+                        $card->addChild($key, $info);
+                    }
+                } else {
+                    $xml->addChild($key, $value);
+                }
+            }
+
             $uploaded = $this->googleApiService->driveUpload($xml->asXML(), 'xml', 'text/xml');
             if ($uploaded['status'] == 200) {
                 $product = Product::find($data['product_id']);

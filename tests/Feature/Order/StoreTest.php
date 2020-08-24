@@ -18,8 +18,15 @@ class StoreTest extends TestCase
     private function unitInputApi($input, $meta = null) {
         Carbon::setTestNow(now());
 
-
         $merge = [];
+        $card = [
+            'owner',
+            'card_number',
+            'date_expiration',
+            'flag',
+            'cvv',
+        ];
+
 
         $merge[$input] = $meta;
         if ($meta) {
@@ -34,10 +41,15 @@ class StoreTest extends TestCase
             }
         }
 
+        if (in_array($input, $card)) {
+            $merge = ['card' => [$merge]];
+        }
+
         $order = factory(Order::class)->make($merge);
 
-        $this->storeOrderThroughTheApi($order)
-        ->assertStatus(422);
+        $store = $this->storeOrderThroughTheApi($order);
+
+        $store->assertStatus(422);
     }
 
     /** @test */
@@ -45,8 +57,8 @@ class StoreTest extends TestCase
         Carbon::setTestNow(now());
         $order = factory(Order::class)->make();
         $store = $this->storeOrderThroughTheApi($order);
-        
-        //Descomentar a linha abaixo para deletar o arquivo no drive
+
+        //Descomentar a linha abaixo para deletar o arquivo no drive, quando rodar o test
         /*
         $googleApiService = new GoogleApiService();
         $googleApiService->deleteFile($store->json()['data']['id_file_drive']);
@@ -67,6 +79,16 @@ class StoreTest extends TestCase
     /** @test */
     public function quantity_purchased_input_field_is_less_than_product_stock() {
         $this->unitInputApi('quantity_purchased', 'less:products,qty_stock');
+    }
+
+    /** @test */
+    public function card_input_field_is_required() {
+        $this->unitInputApi('card');
+    }
+
+    /** @test */
+    public function card_input_field_is_array() {
+        $this->unitInputApi('card', 'string');
     }
 
     /** @test */

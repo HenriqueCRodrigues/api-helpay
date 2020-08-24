@@ -25,6 +25,11 @@ class OrderRequest extends FormRequest
      */
     public function rules()
     {
+        $card = $this->request->get('card');
+        $card = isset($card[0]) ? $card[0] : null;
+
+        $flag = isset($card['flag']) ? $card['flag'] : null;
+
         return [
             'product_id' => 'required|exists:products,id', 
             'quantity_purchased' => [
@@ -34,14 +39,16 @@ class OrderRequest extends FormRequest
                     $query->where('products.qty_stock', '<=', $this->request->get('quantity_purchased'));
                 })
             ],
-            'card_number' => [
+            'card' => 'required|array', 
+            'card.*.owner' => 'required', 
+            'card.*.card_number' => [
                 'required',
                 'integer',
-                new CreditCardRule($this->request->get('flag'))
+                new CreditCardRule($flag)
             ], 
-            'date_expiration' => 'required|date_format:m/Y', 
-            'flag' => 'required', 
-            'cvv' => 'required'
+            'card.*.date_expiration' => 'required|date_format:m/Y', 
+            'card.*.flag' => 'required', 
+            'card.*.cvv' => 'required'
         ];
     }
 }

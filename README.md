@@ -1,4 +1,6 @@
-<p align="center"><img src="https://res.cloudinary.com/dtfbvvkyp/image/upload/v1566331377/laravel-logolockup-cmyk-red.svg" width="400"></p>
+<p align="center">
+    <img src="https://res.cloudinary.com/dtfbvvkyp/image/upload/v1566331377/laravel-logolockup-cmyk-red.svg" width="400">
+    <img src="https://s2.glbimg.com/AAFtO5HUFg5jLD0fbuw4_qG1B7c=/1200x/smart/filters:cover():strip_icc()/i.s3.glbimg.com/v1/AUTH_59edd422c0c84a879bd37670ae4f538a/internal_photos/bs/2018/7/N/7PVvISR9GWMFHNR7vfmw/helpay-1-.jpg" width="180"></p>
 
 <p align="center">
 <a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
@@ -7,42 +9,59 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
 </p>
 
-## About Laravel
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Desafio Helpay: Somos sua solução de pagamento definitiva
+Foi realizado a criação de uma API em laravel<br>
+Para emular o projeto, basta seguir os requisitos básico do Laravel 7.x, que se encontra no link: https://laravel.com/docs/7.x
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Após o clone do projeto, basta entrar no projeto e seguir o procedimento abaixo<br>
+<ul>
+    <li>executar o comando "composer install"</li>
+    <li>executar o comando "git clone https://github.com/laradock/laradock.git"</li>
+</ul>
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+A API utiliza o laradock para instanciar o docker
 
-## Learning Laravel
+Para utilizar o Docker na api, entre na pasta laradock e execute o comando "sudo docker-compose up -d nginx mysql phpmyadmin".<br>
+OBS: Após o git clone do laradock, deve-se configurar um arquivo .env dentro da pasta laradock, existe um arquivo .env.example para melhor entendimento.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Para configurar o drive deve ter os arquivos "credentials.json" e "token.json".<br>
+O arquivo "credentials.json" informe o seu "client_id" e "client_secret" caso queira utilizar o aplicativo google que criei, ou basta substituir o arquivo com a credenciais de seu aplicativo google.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+O arquivo "token.json" é gerado pela a rota "api/google/callback", após definir seu "client_id" e "client_secret" no "credentials.json", quando solicitar a rota irá disponibilizar um link do google, para confirmar o uso da aplicação google, após isso irá retornar com o callback com código para gerar o "token.json"
 
-## Laravel Sponsors
+Importante: Se atente a rota "api/google/callback", para o meu OAuth2.0 criei essa "http://localhost:8000/api/callback" nos direcionamento, se atente de adicionar a rota "api/google/callback" em seu OAuth2.0
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
 
-### Premium Partners
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[OP.GG](https://op.gg)**
+#### Rotas da API
+
+```
++--------+----------+--------------------------+-----------------+------------------------------------------------+------------+
+| Domain | Method   | URI                      | Name            | Action                                         | Middleware |
++--------+----------+--------------------------+-----------------+------------------------------------------------+------------+
+|        | GET|HEAD | /                        |                 | Closure                                        | web        |
+|        | GET|HEAD | api/google/callback      |                 | App\Http\Controllers\GoogleController@callback | api        |
+|        | POST     | api/products             | products.store  | App\Http\Controllers\ProductController@store   | api        |
+|        | GET|HEAD | api/products             | products.list   | App\Http\Controllers\ProductController@list    | api        |
+|        | GET|HEAD | api/products/{productId} | products.show   | App\Http\Controllers\ProductController@show    | api        |
+|        | DELETE   | api/products/{productId} | products.delete | App\Http\Controllers\ProductController@delete  | api        |
+|        | POST     | api/purchase             | orders.store    | App\Http\Controllers\OrderController@store     | api        |
++--------+----------+--------------------------+-----------------+------------------------------------------------+------------+
+
+```
+
+#### Rotas 
+As rotas seguiu todas as especificações solicitada no documento de teste.<br>
+Foi criado uma collection no <a href="https://documenter.getpostman.com/view/6533460/T1LVA4fe?version=latest">Postman</a> para dar apoio.
+
+
+<br>
+
+#### TDD
+<img src="https://i.imgur.com/ayK5oAL.png">
+<br>
+
 
 ## Contributing
 
